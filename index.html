@@ -1,0 +1,443 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine? 💘</title>
+
+  <style>
+    :root{
+      --bg1:#ff4f93;
+      --bg2:#ffb6d5;
+      --card:#ffffffde;
+      --text:#2a1322;
+      --accent:#ff2f7d;
+      --shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 20%, #ffffff55, transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, #ffffff55, transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+      padding:24px;
+    }
+
+    /* Floating hearts */
+    .heart{
+      position:absolute;
+      width:14px; height:14px;
+      background:rgba(255,255,255,0.75);
+      transform:rotate(45deg);
+      border-radius:3px;
+      animation: floatUp 9s linear infinite;
+      filter: blur(.2px);
+      pointer-events:none;
+    }
+    .heart::before, .heart::after{
+      content:"";
+      position:absolute;
+      width:14px; height:14px;
+      background:rgba(255,255,255,0.75);
+      border-radius:50%;
+    }
+    .heart::before{ left:-7px; top:0; }
+    .heart::after{ left:0; top:-7px; }
+
+    @keyframes floatUp{
+      from{ transform: translateY(45vh) rotate(45deg); opacity:0; }
+      10%{ opacity:.9; }
+      to{ transform: translateY(-130vh) rotate(45deg); opacity:0; }
+    }
+
+    .card{
+      width:min(920px, 100%);
+      background:var(--card);
+      backdrop-filter: blur(12px);
+      border:1px solid #ffffffaa;
+      border-radius:26px;
+      box-shadow: var(--shadow);
+      padding:22px;
+      position:relative;
+    }
+
+    .top{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    h1{
+      font-size: clamp(28px, 4vw, 46px);
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:6px 0 0;
+      font-size: clamp(14px, 2vw, 18px);
+      opacity:.9;
+      line-height:1.35;
+    }
+
+    /* -------- CAROUSEL (corrected sizing) -------- */
+    .carousel{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16 / 9;   /* REQUIRED */
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid #ffffffaa;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+      background:#fff;
+    }
+    .slides{
+      height:100%;
+      display:flex;
+      transition: transform .45s ease;
+    }
+    .slide{
+      min-width:100%;
+      height:100%;           /* REQUIRED */
+      position:relative;
+    }
+
+  .slide img{
+  width:100%;
+  height:100%;
+  object-fit: contain;   /* shows the whole image */
+  display:block;
+  background: #000;      /* fills empty space nicely */
+}
+
+
+    /* Corrected video styling (safer) */
+    .slideVideo{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .fadeShade{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.25));
+      pointer-events:none;
+    }
+
+    .cap{
+      position:absolute;
+      left:14px;
+      bottom:12px;
+      color:#fff;
+      font-weight:900;
+      text-shadow: 0 8px 18px rgba(0,0,0,0.5);
+      font-size: clamp(14px, 2vw, 18px);
+      padding:8px 10px;
+      border-radius:14px;
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .navBtn{
+      position:absolute;
+      top:50%;
+      transform: translateY(-50%);
+      border:none;
+      width:44px; height:44px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:20px;
+      font-weight:900;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+      transition: transform .15s ease;
+    }
+    .navBtn:hover{ transform: translateY(-50%) scale(1.05); }
+    .prev{ left:12px; }
+    .next{ right:12px; }
+
+    .dots{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      bottom:10px;
+      display:flex;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(6px);
+    }
+    .dot{
+      width:9px; height:9px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.55);
+      cursor:pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .dot.active{
+      background:#fff;
+      transform: scale(1.15);
+    }
+
+    /* -------- QUESTION + BUTTONS -------- */
+    .question{
+      margin-top:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      text-align:center;
+    }
+    .question p{
+      margin:0;
+      font-size: clamp(18px, 2.7vw, 28px);
+      font-weight: 950;
+    }
+
+    .btnRow{
+      position:relative;
+      width:min(560px, 100%);
+      height: 98px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      margin-top:2px;
+      border-radius:18px;
+    }
+
+    button{
+      border:none;
+      border-radius:999px;
+      padding:14px 22px;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+
+    #yesBtn{
+      background: linear-gradient(135deg, var(--accent), #ff7ab6);
+      color:white;
+      box-shadow: 0 12px 28px rgba(255,47,125,0.35);
+      transform: scale(1);
+    }
+    #yesBtn:hover{ transform: scale(1.05); }
+
+    #noBtn{
+      background: linear-gradient(135deg, #1f1f1f, #3b3b3b);
+      color:white;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+      position:absolute;
+      right: 18%;
+      top: 26px;
+    }
+
+    .result{
+      display:none;
+      margin-top:10px;
+      padding:14px 16px;
+      border-radius:16px;
+      background: #ffffffcc;
+      border: 1px solid #ffffffaa;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .tiny{
+      margin-top:8px;
+      font-size:12px;
+      opacity:.75;
+    }
+
+    @media (max-width: 720px){
+      .carousel{ aspect-ratio: 4 / 5; } /* nicer on phones */
+      .btnRow{ height:120px; }
+      #noBtn{ right:8%; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="top">
+      <div>
+        <h1>Hey my love 💖</h1>
+        <div class="sub">I’ve been meaning to ask you something…</div>
+      </div>
+      <div style="font-size:34px;">💌💘🌹</div>
+    </div>
+
+    <!-- CAROUSEL -->
+    <section class="carousel" aria-label="photo carousel">
+      <div class="slides" id="slides">
+
+        <div class="slide">
+          <img src="Images/Lina1.JPG" alt="Photo 1" />
+          <div class="fadeShade"></div>
+          <div class="cap">You look amazing 😍</div>
+        </div>
+
+        <div class="slide">
+          <img src="Images/Lina2.JPG" alt="Photo 2" />
+          <div class="fadeShade"></div>
+          <div class="cap">My favorite smile ✨</div>
+        </div>
+
+        <div class="slide">
+          <img src="Images/Lina3.jpg" alt="Photo 3" />
+          <div class="fadeShade"></div>
+          <div class="cap">Beautiful always ❤️</div>
+        </div>
+
+        
+ <div class="slide">
+          <img src="Images/Lina4.jpg" alt="Photo 4" />
+          <div class="fadeShade"></div>
+          <div class="cap">Beautiful always ❤️</div>
+        </div>
+
+      </div>
+
+      <button class="navBtn prev" id="prevBtn" aria-label="Previous">‹</button>
+      <button class="navBtn next" id="nextBtn" aria-label="Next">›</button>
+
+      <div class="dots" id="dots" aria-label="carousel dots">
+        <div class="dot active" data-i="0"></div>
+        <div class="dot" data-i="1"></div>
+        <div class="dot" data-i="2"></div>
+        <div class="dot" data-i="3"></div>
+      </div>
+    </section>
+
+    <!-- QUESTION -->
+    <section class="question">
+      <p>Will you be my Valentine? 🥹❤️</p>
+
+      <div class="btnRow" id="btnRow">
+        <button id="yesBtn">YES 💞</button>
+        <button id="noBtn">NO 😅</button>
+      </div>
+
+      <div class="result" id="result"></div>
+      <div class="tiny">Run it with VS Code “Live Server” if videos don’t autoplay when double-clicking.</div>
+    </section>
+  </main>
+
+  <script>
+    // Helpers
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    // Floating hearts
+    for(let i=0;i<14;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = rand(0, 100) + "%";
+      h.style.animationDelay = rand(0, 7) + "s";
+      h.style.opacity = rand(0.35, 0.9);
+      h.style.transform = "rotate(45deg) scale(" + rand(0.7, 1.5) + ")";
+      document.body.appendChild(h);
+    }
+
+    // Carousel
+    const slidesEl = document.getElementById("slides");
+    const dotsEl = document.getElementById("dots");
+    const dots = Array.from(dotsEl.querySelectorAll(".dot"));
+    const total = dots.length;
+
+    let idx = 0;
+    let timer = null;
+
+    function renderCarousel(){
+      slidesEl.style.transform = `translateX(-${idx * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+    }
+
+    function go(n){
+      idx = (n + total) % total;
+      renderCarousel();
+      restartAuto();
+    }
+    function next(){ go(idx + 1); }
+    function prev(){ go(idx - 1); }
+
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.getElementById("prevBtn").addEventListener("click", prev);
+    dots.forEach(d => d.addEventListener("click", () => go(Number(d.dataset.i))));
+
+    function restartAuto(){
+      if(timer) clearInterval(timer);
+      timer = setInterval(next, 3500);
+    }
+    restartAuto();
+    renderCarousel();
+
+    // YES/NO behavior
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const btnRow = document.getElementById("btnRow");
+    const result = document.getElementById("result");
+
+    let yesScale = 1;
+
+    function moveNoButtonAway(){
+      const rowRect = btnRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = Math.max(0, rowRect.width - btnRect.width);
+      const maxY = Math.max(0, rowRect.height - btnRect.height);
+
+      const x = rand(0, maxX);
+      const y = rand(0, maxY);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.style.right = "auto";
+      noBtn.style.position = "absolute";
+
+      yesScale = Math.min(yesScale + 0.12, 2.6);
+      yesBtn.style.transform = `scale(${yesScale})`;
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButtonAway);
+    btnRow.addEventListener("mousemove", (e) => {
+      const b = noBtn.getBoundingClientRect();
+      const dx = e.clientX - (b.left + b.width / 2);
+      const dy = e.clientY - (b.top + b.height / 2);
+      const dist = Math.hypot(dx, dy);
+      if(dist < 95) moveNoButtonAway();
+    });
+
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButtonAway();
+    });
+
+    yesBtn.addEventListener("click", () => {
+      result.style.display = "block";
+      result.textContent = "YAY!!! 💘🥰 I can’t wait to celebrate with you!!";
+
+      noBtn.disabled = true;
+      yesBtn.disabled = true;
+      noBtn.style.opacity = 0.6;
+      yesBtn.style.opacity = 0.95;
+    });
+  </script>
+</body>
+</html>
+```
